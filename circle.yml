@@ -3,5 +3,8 @@ machine:
     version: 2.2.3
 
 dependencies:
-    pre:
+  pre:
     - curl -fsSL https://git.io/v2Ifn | bash
+
+database:
+  override:
