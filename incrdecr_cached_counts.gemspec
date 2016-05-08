@@ -5,7 +5,7 @@ require "cached_counts/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
-  s.name        = "cached_counts"
+  s.name        = "incrdecr_cached_counts"
   s.version     = CachedCounts::VERSION
   s.authors     = ["David Judd"]
   s.email       = ["david@academia.edu"]
