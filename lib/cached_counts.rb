@@ -244,7 +244,11 @@ module CachedCounts
           relation.select_values = ['count(*)']
 
           conn = CachedCounts.connection_for(counted_class)
-          conn.select_value(relation.to_sql).to_i
+          if Rails.version < '4.2'.freeze
+            conn.select_value(relation.to_sql, nil, relation.values[:bind] || []).to_i
+          else
+            conn.select_value(relation.to_sql).to_i
+          end
         end
 
         if val.is_a?(ActiveSupport::Cache::Entry)
