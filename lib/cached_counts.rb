@@ -297,6 +297,9 @@ module CachedCounts
 
       counted_class.after_commit increment_hook, options.slice(:if).merge(on: :create)
 
+      # This is ridiculous, but I can't find a better way to test for it
+      need_without_protection = instance_method(:assign_attributes).arity > 1
+
       if (if_proc = options[:if])
         if if_proc.is_a?(Symbol)
           if_proc = ->{ send(options[:if]) }
@@ -321,7 +324,7 @@ module CachedCounts
           end
 
           old_version = dup
-          if previous_values.respond_to?(:permitted?)
+          if need_without_protection
             old_version.assign_attributes previous_values, without_protection: true
           else
             old_version.assign_attributes previous_values
