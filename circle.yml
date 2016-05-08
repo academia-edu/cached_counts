@@ -1,0 +1,7 @@
+machine:
+  ruby:
+    version: 2.2.3
+
+dependencies:
+    pre:
+    - curl -fsSL https://git.io/v2Ifn | bash

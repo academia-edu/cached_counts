@@ -4,7 +4,7 @@ require 'cached_counts/connection_for'
 module CachedCounts
   extend ActiveSupport::Concern
 
-  class_methods do
+  module ClassMethods
     # Cache the count for a scope in memcached.
     #
     # e.g.
