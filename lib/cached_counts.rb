@@ -298,7 +298,7 @@ module CachedCounts
       counted_class.after_commit increment_hook, options.slice(:if).merge(on: :create)
 
       # This is ridiculous, but I can't find a better way to test for it
-      need_without_protection = instance_method(:assign_attributes).arity > 1
+      need_without_protection = instance_method(:assign_attributes).arity != 1
 
       if (if_proc = options[:if])
         if if_proc.is_a?(Symbol)
