@@ -1,0 +1,48 @@
+= CachedCounts
+
+A replacement for Rails' counter caches, using memcached.
+
+Caches counts of models in a scope or association in memcached, and keeps the
+cache up to date using incr/decr operations.
+
+You might prefer this gem over Rails' built-in counter caches when:
+* You want to cache the total number of models for a class or scope
+* You have a large association (e.g. followers of a popular figure) and want to avoid contention on a database row
+* You want your caches to expire and be refreshed to mitigate the risk of getting out of sync
+* You don't need to use counts as part of more complex SQL queries
+
+= Usage
+
+Basic usage:
+
+  class User < ActiveRecord::Base
+    include CachedCounts
+
+    has_many :followers, class_name: 'Following' #, ...
+    scope :confirmed, ->{ where(confirmed: true) }
+
+    # creates cached class method `User.confirmed_count`
+    caches_count_where :confirmed, if: :confirmed?
+
+    # creates cached instance method `user.followers_count`
+    caches_count_of :followers
+  end
+
+  class Following < ActiveRecord::Base
+    include CachedCounts
+
+    belongs_to :followee, class_name: 'User', # ...
+  end
+
+For full options, see docs for CachedCounts.caches_count_of
+and CachedCounts.caches_count_where.
+
+= Licence
+
+MIT
+
+Copyright Academia.edu
+
+= Contributing
+
+ug reports and pull requests are welcome on GitHub at https://github.com/academia-edu/cached_counts

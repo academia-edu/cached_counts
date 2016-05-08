@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module CachedCounts - RDoc Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    
+    
+    <div id="extends-section" class="nav-section">
+  <h3>Extended With Modules</h3>
+
+  <ul class="link-list">
+    
+  
+    <li><span class="extend">ActiveSupport::Concern</span>
+  
+  
+  </ul>
+</div>
+
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-connection_for">::connection_for</a>
+    
+    <li ><a href="#method-i-add_association_counting_hooks">#add_association_counting_hooks</a>
+    
+    <li ><a href="#method-i-add_count_attribute_methods">#add_count_attribute_methods</a>
+    
+    <li ><a href="#method-i-add_counting_hooks">#add_counting_hooks</a>
+    
+    <li ><a href="#method-i-add_scope_counting_hooks">#add_scope_counting_hooks</a>
+    
+    <li ><a href="#method-i-association_count_key">#association_count_key</a>
+    
+    <li ><a href="#method-i-caches_count_of">#caches_count_of</a>
+    
+    <li ><a href="#method-i-caches_count_of-21">#caches_count_of!</a>
+    
+    <li ><a href="#method-i-caches_count_where">#caches_count_where</a>
+    
+    <li ><a href="#method-i-caches_count_where-21">#caches_count_where!</a>
+    
+    <li ><a href="#method-i-default_race_condition_fallback_proc">#default_race_condition_fallback_proc</a>
+    
+    <li ><a href="#method-i-define_association_count_attribute">#define_association_count_attribute</a>
+    
+    <li ><a href="#method-i-define_scope_count_attribute">#define_scope_count_attribute</a>
+    
+    <li ><a href="#method-i-generate_association_counting_hook_key_getter">#generate_association_counting_hook_key_getter</a>
+    
+    <li ><a href="#method-i-generate_association_relation_getter">#generate_association_relation_getter</a>
+    
+    <li ><a href="#method-i-scope_count_key">#scope_count_key</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-CachedCounts">
+  <h1 id="module-CachedCounts" class="module">
+    module CachedCounts
+  </h1>
+
+  <section class="description">
+    
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
+      <dl>
+      
+        <dt id="VERSION">VERSION
+        
+        <dd>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-c-connection_for" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">connection_for</span><span
+            class="attribute-access-type">[W]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Optional configuration: set a proc which takes the class we are counting
+and returns a connection. Useful with replication, e.g. with Octopus:</p>
+
+<p>`CachedCounts.connection_for = proc { |klass|
+klass.using(:read_slave).connection }`</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-connection_for" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">connection_for</span><span
+            class="method-args">(counted_class)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="connection_for-source">
+            <pre><span class="ruby-comment"># File lib/cached_counts/connection_for.rb, line 9</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">connection_for</span>(<span class="ruby-identifier">counted_class</span>)
+  <span class="ruby-ivar">@connection_for</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">proc</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">klass</span><span class="ruby-operator">|</span> <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">connection</span> }
+  <span class="ruby-ivar">@connection_for</span>[<span class="ruby-identifier">counted_class</span>]
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-add_association_counting_hooks" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_association_counting_hooks</span><span
+            class="method-args">(attribute_name, association, options)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="add_association_counting_hooks-source">
+            <pre><span class="ruby-comment"># File lib/cached_counts.rb, line 204</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_association_counting_hooks</span>(<span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">association</span>, <span class="ruby-identifier">options</span>)
+  <span class="ruby-identifier">key_getter</span> = <span class="ruby-identifier">generate_association_counting_hook_key_getter</span> <span class="ruby-identifier">association</span>, <span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">options</span>
+
+  <span class="ruby-identifier">add_counting_hooks</span>(
+    <span class="ruby-node">&quot;#{name.demodulize.underscore}_#{attribute_name}&quot;</span>,
+    <span class="ruby-identifier">key_getter</span>,
+    <span class="ruby-identifier">association</span>.<span class="ruby-identifier">klass</span>,
+    <span class="ruby-identifier">options</span>
+  )
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-add_count_attribute_methods" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_count_attribute_methods</span><span
+            class="method-args">(attribute_name, key_getter, relation_getter, define_with, counted_class, options)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="add_count_attribute_methods-source">
+            <pre><span class="ruby-comment"># File lib/cached_counts.rb, line 215</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_count_attribute_methods</span>(<span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">key_getter</span>, <span class="ruby-identifier">relation_getter</span>, <span class="ruby-identifier">define_with</span>, <span class="ruby-identifier">counted_class</span>, <span class="ruby-identifier">options</span>)
+  <span class="ruby-identifier">expires_in</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">fetch</span> <span class="ruby-value">:expires_in</span>, <span class="ruby-value">1</span>.<span class="ruby-identifier">week</span>
+  <span class="ruby-identifier">race_condition_fallback</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">fetch</span> <span class="ruby-value">:race_condition_fallback</span>, <span class="ruby-keyword">nil</span>
+
+  <span class="ruby-identifier">key_method</span> = <span class="ruby-node">&quot;#{attribute_name}_count_key&quot;</span>
+
+  <span class="ruby-identifier">send</span> <span class="ruby-identifier">define_with</span>, <span class="ruby-identifier">key_method</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">key_getter</span>
+
+  <span class="ruby-identifier">send</span> <span class="ruby-identifier">define_with</span>, <span class="ruby-node">&quot;#{attribute_name}_count&quot;</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">val</span> = <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">cache</span>.<span class="ruby-identifier">fetch</span>(
+      <span class="ruby-identifier">send</span>(<span class="ruby-identifier">key_method</span>),
+      <span class="ruby-identifier">expires_in</span><span class="ruby-operator">:</span> <span class="ruby-identifier">expires_in</span>,
+      <span class="ruby-identifier">race_condition_ttl</span><span class="ruby-operator">:</span> <span class="ruby-value">30</span>.<span class="ruby-identifier">seconds</span>,
+      <span class="ruby-identifier">raw</span><span class="ruby-operator">:</span> <span class="ruby-keyword">true</span> <span class="ruby-comment"># Necessary for incrementing to work correctly</span>
+    ) <span class="ruby-keyword">do</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">race_condition_fallback</span>
+        <span class="ruby-comment"># Ensure that other reads find something in the cache, but</span>
+        <span class="ruby-comment"># continue calculating here because the default is likely inaccurate.</span>
+        <span class="ruby-identifier">fallback_value</span> = <span class="ruby-identifier">instance_exec</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">race_condition_fallback</span>
+        <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">cache</span>.<span class="ruby-identifier">write</span>(
+          <span class="ruby-identifier">send</span>(<span class="ruby-identifier">key_method</span>),
+          <span class="ruby-identifier">fallback_value</span>.<span class="ruby-identifier">to_i</span>,
+          <span class="ruby-identifier">expires_in</span><span class="ruby-operator">:</span> <span class="ruby-value">30</span>.<span class="ruby-identifier">seconds</span>,
+          <span class="ruby-identifier">raw</span><span class="ruby-operator">:</span> <span class="ruby-keyword">true</span>
+        )
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-identifier">relation</span> = <span class="ruby-identifier">instance_exec</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">relation_getter</span>)
+      <span class="ruby-identifier">relation</span> = <span class="ruby-identifier">relation</span>.<span class="ruby-identifier">reorder</span>(<span class="ruby-string">&#39;&#39;</span>)
+      <span class="ruby-identifier">relation</span>.<span class="ruby-identifier">select_values</span> = [<span class="ruby-string">&#39;count(*)&#39;</span>]
+
+      <span class="ruby-identifier">conn</span> = <span class="ruby-constant">CachedCounts</span>.<span class="ruby-identifier">connection_for</span>(<span class="ruby-identifier">counted_class</span>)
+      <span class="ruby-identifier">conn</span>.<span class="ruby-identifier">select_value</span>(<span class="ruby-identifier">relation</span>.<span class="ruby-identifier">to_sql</span>).<span class="ruby-identifier">to_i</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">val</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">ActiveSupport</span><span class="ruby-operator">::</span><span class="ruby-constant">Cache</span><span class="ruby-operator">::</span><span class="ruby-constant">Entry</span>)
+      <span class="ruby-identifier">val</span>.<span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_i</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">val</span>.<span class="ruby-identifier">to_i</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">send</span> <span class="ruby-identifier">define_with</span>, <span class="ruby-node">&quot;#{attribute_name}_count=&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
+    <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">cache</span>.<span class="ruby-identifier">write</span>(
+      <span class="ruby-identifier">send</span>(<span class="ruby-identifier">key_method</span>),
+      <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_i</span>,
+      <span class="ruby-identifier">expires_in</span><span class="ruby-operator">:</span> <span class="ruby-identifier">expires_in</span>,
+      <span class="ruby-identifier">raw</span><span class="ruby-operator">:</span> <span class="ruby-keyword">true</span>
+    )
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">send</span> <span class="ruby-identifier">define_with</span>, <span class="ruby-node">&quot;expire_#{attribute_name}_count&quot;</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">cache</span>.<span class="ruby-identifier">delete</span> <span class="ruby-identifier">send</span>(<span class="ruby-identifier">key_method</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-add_counting_hooks" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_counting_hooks</span><span
+            class="method-args">(attribute_name, key_getter, counted_class, options)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="add_counting_hooks-source">
+            <pre><span class="ruby-comment"># File lib/cached_counts.rb, line 271</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_counting_hooks</span>(<span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">key_getter</span>, <span class="ruby-identifier">counted_class</span>, <span class="ruby-identifier">options</span>)
+  <span class="ruby-identifier">increment_hook</span> = <span class="ruby-node">&quot;increment_#{attribute_name}_count&quot;</span>
+  <span class="ruby-identifier">counted_class</span>.<span class="ruby-identifier">send</span> <span class="ruby-value">:define_method</span>, <span class="ruby-identifier">increment_hook</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-keyword">if</span> (<span class="ruby-identifier">key</span> = <span class="ruby-identifier">instance_exec</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">key_getter</span>)
+      <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">cache</span>.<span class="ruby-identifier">increment</span>(
+        <span class="ruby-identifier">key</span>,
+        <span class="ruby-value">1</span>,
+        <span class="ruby-identifier">initial</span><span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span> <span class="ruby-comment"># Increment only if the key already exists</span>
+      )
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">decrement_hook</span> = <span class="ruby-node">&quot;decrement_#{attribute_name}_count&quot;</span>
+  <span class="ruby-identifier">counted_class</span>.<span class="ruby-identifier">send</span> <span class="ruby-value">:define_method</span>, <span class="ruby-identifier">decrement_hook</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-keyword">if</span> (<span class="ruby-identifier">key</span> = <span class="ruby-identifier">instance_exec</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">key_getter</span>)
+      <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">cache</span>.<span class="ruby-identifier">decrement</span>(
+        <span class="ruby-identifier">key</span>,
+        <span class="ruby-value">1</span>,
+        <span class="ruby-identifier">initial</span><span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span> <span class="ruby-comment"># Decrement only if the key already exists</span>
+      )
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">counted_class</span>.<span class="ruby-identifier">after_commit</span> <span class="ruby-identifier">increment_hook</span>, <span class="ruby-identifier">options</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-value">:if</span>).<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">on</span><span class="ruby-operator">:</span> <span class="ruby-value">:create</span>)
+
+  <span class="ruby-keyword">if</span> (<span class="ruby-identifier">if_proc</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:if</span>])
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">if_proc</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Symbol</span>)
+      <span class="ruby-identifier">if_proc</span> = <span class="ruby-operator">-</span><span class="ruby-operator">&gt;</span>{ <span class="ruby-identifier">send</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:if</span>]) }
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">recorded_eligibility_var</span> = <span class="ruby-node">&quot;@_was_eligible_for_#{attribute_name}_count&quot;</span>
+    <span class="ruby-identifier">counted_class</span>.<span class="ruby-identifier">before_destroy</span> <span class="ruby-keyword">do</span>
+      <span class="ruby-identifier">instance_variable_set</span> <span class="ruby-identifier">recorded_eligibility_var</span>, <span class="ruby-operator">!</span><span class="ruby-operator">!</span><span class="ruby-identifier">instance_exec</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">if_proc</span>)
+      <span class="ruby-keyword">true</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">counted_class</span>.<span class="ruby-identifier">after_commit</span> <span class="ruby-identifier">on</span><span class="ruby-operator">:</span> <span class="ruby-value">:destroy</span> <span class="ruby-keyword">do</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">instance_variable_get</span>(<span class="ruby-identifier">recorded_eligibility_var</span>)
+        <span class="ruby-identifier">send</span>(<span class="ruby-identifier">decrement_hook</span>)
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">counted_class</span>.<span class="ruby-identifier">after_commit</span> <span class="ruby-identifier">on</span><span class="ruby-operator">:</span> <span class="ruby-value">:update</span> <span class="ruby-keyword">do</span>
+      <span class="ruby-comment"># There is no before-hook which will reliably have access to the</span>
+      <span class="ruby-comment"># previous version of the object, so we need to simulate it.</span>
+      <span class="ruby-identifier">previous_values</span> = <span class="ruby-identifier">previous_changes</span>.<span class="ruby-identifier">each_with_object</span>({}) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span>(<span class="ruby-identifier">key</span>,<span class="ruby-identifier">vals</span>), <span class="ruby-identifier">memo</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">memo</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">vals</span>.<span class="ruby-identifier">first</span>
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-identifier">old_version</span> = <span class="ruby-identifier">dup</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">previous_values</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:permitted?</span>)
+        <span class="ruby-identifier">old_version</span>.<span class="ruby-identifier">assign_attributes</span> <span class="ruby-identifier">previous_values</span>, <span class="ruby-identifier">without_protection</span><span class="ruby-operator">:</span> <span class="ruby-keyword">true</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">old_version</span>.<span class="ruby-identifier">assign_attributes</span> <span class="ruby-identifier">previous_values</span>
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-identifier">was</span> = <span class="ruby-operator">!</span><span class="ruby-operator">!</span><span class="ruby-identifier">old_version</span>.<span class="ruby-identifier">instance_exec</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">if_proc</span>)
+      <span class="ruby-identifier">is</span> = <span class="ruby-operator">!</span><span class="ruby-operator">!</span><span class="ruby-identifier">instance_exec</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">if_proc</span>)
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">was</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">is</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">is</span>
+          <span class="ruby-identifier">send</span>(<span class="ruby-identifier">increment_hook</span>)
+        <span class="ruby-keyword">else</span>
+          <span class="ruby-identifier">send</span>(<span class="ruby-identifier">decrement_hook</span>)
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">counted_class</span>.<span class="ruby-identifier">after_commit</span> <span class="ruby-identifier">decrement_hook</span>, <span class="ruby-identifier">on</span><span class="ruby-operator">:</span> <span class="ruby-value">:destroy</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-add_scope_counting_hooks" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_scope_counting_hooks</span><span
+            class="method-args">(attribute_name, options)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="add_scope_counting_hooks-source">
+            <pre><span class="ruby-comment"># File lib/cached_counts.rb, line 192</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_scope_counting_hooks</span>(<span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">options</span>)
+  <span class="ruby-identifier">version</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">fetch</span> <span class="ruby-value">:version</span>, <span class="ruby-value">1</span>
+  <span class="ruby-identifier">key</span> = <span class="ruby-identifier">scope_count_key</span>(<span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">version</span>)
+
+  <span class="ruby-identifier">add_counting_hooks</span>(
+    <span class="ruby-identifier">attribute_name</span>,
+    <span class="ruby-operator">-</span><span class="ruby-operator">&gt;</span> { <span class="ruby-identifier">key</span> },
+    <span class="ruby-keyword">self</span>,
+    <span class="ruby-identifier">options</span>
+  )
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-association_count_key" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">association_count_key</span><span
+            class="method-args">(counter_id, attribute_name, version = 1)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="association_count_key-source">
+            <pre><span class="ruby-comment"># File lib/cached_counts.rb, line 98</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">association_count_key</span>(<span class="ruby-identifier">counter_id</span>, <span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">version</span> = <span class="ruby-value">1</span>)
+  <span class="ruby-node">&quot;#{name}:#{counter_id}:#{attribute_name}_count:#{version}&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">counter_id</span>.<span class="ruby-identifier">nil?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-caches_count_of" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">caches_count_of</span><span
+            class="method-args">(attribute_name, options = {})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Cache the count for an association in memcached.</p>
+
+<p>e.g.</p>
+
+<pre>User.caches_count_of :friends
+&gt; User.first.friends_count # Users.first.friends.count, but cached</pre>
+
+<p>Automatically adds after_commit hooks to the associated class which
+increment/decrement the value in memcached when needed. Queries the db on
+cache miss.</p>
+
+<p>Valid options:</p>
+
+<pre>:association
+  Name of the association to count. Defaults to the attribute_name
+  (the required argument to `caches_count_of`).
+
+:alias
+  Alias(es) for the count attribute. Useful with join tables.
+  e.g. `caches_count_of :user_departments, alias: &#39;users&#39;`
+  &gt; Department.first.users_count
+
+:expires_in
+  Expiry for the cached value.
+
+:if
+  proc passed through to the after_commit hooks on the counted class;
+  decides whether an object counts towards the association total.
+
+:scope
+  proc used like an ActiveRecord scope on the counted class on cache misses.
+
+:version
+  Cache version - bump if you change the definition of a count.</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="caches_count_of-source">
+            <pre><span class="ruby-comment"># File lib/cached_counts.rb, line 86</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">caches_count_of</span>(<span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">options</span> = {})
+  <span class="ruby-comment"># Delay actual run to work around circular dependencies</span>
+  <span class="ruby-identifier">klass</span> = <span class="ruby-keyword">self</span>
+  <span class="ruby-constant">ActiveSupport</span>.<span class="ruby-identifier">on_load</span> <span class="ruby-value">:cached_counts</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">send</span> <span class="ruby-value">:caches_count_of!</span>, <span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">options</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-caches_count_of-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">caches_count_of!</span><span
+            class="method-args">(attribute_name, options)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="caches_count_of-21-source">
+            <pre><span class="ruby-comment"># File lib/cached_counts.rb, line 113</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">caches_count_of!</span>(<span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">options</span>)
+  <span class="ruby-identifier">association_name</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">fetch</span> <span class="ruby-value">:association</span>, <span class="ruby-identifier">attribute_name</span>
+  <span class="ruby-identifier">association</span> = <span class="ruby-identifier">reflect_on_association</span>(<span class="ruby-identifier">association_name</span>.<span class="ruby-identifier">to_sym</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{self} does not have an association named #{association_name}&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">association</span>
+
+  <span class="ruby-identifier">define_association_count_attribute</span> <span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">association</span>, <span class="ruby-identifier">options</span>
+  <span class="ruby-identifier">add_association_counting_hooks</span> <span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">association</span>, <span class="ruby-identifier">options</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-caches_count_where" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">caches_count_where</span><span
+            class="method-args">(attribute_name, options = {})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Cache the count for a scope in memcached.</p>
+
+<p>e.g.</p>
+
+<pre>User.caches_count_where :confirmed
+&gt; User.confirmed_count # User.confirmed.count, but cached</pre>
+
+<p>Automatically adds after_commit hooks which increment/decrement the value
+in memcached when needed. Queries the db on cache miss.</p>
+
+<p>Valid options:</p>
+
+<pre>:scope
+  Name of the scope to count. Defaults to the attribute_name
+  (the required argument to `caches_count_where`).
+
+:alias
+  Alias(es) for the count attribute.
+  e.g. `caches_count_where :confirmed, alias: &#39;sitemap&#39;`
+  &gt; User.sitemap_count
+
+:expires_in
+  Expiry for the cached value.
+
+:if
+  proc passed through to the after_commit hooks;
+  decides whether an object counts towards the association total.
+
+:version
+  Cache version - bump if you change the definition of a count.
+
+:race_condition_fallback
+  Fallback to the result of this proc if the cache is empty, while
+  loading the actual value from the db. Works similarly to
+  race_condition_ttl but for empty caches rather than expired values.
+  Meant to prevent a thundering-herd scenario, if for example a
+  memcached instance goes away. Can be nil; defaults to using a value
+  grabbed from the cache or DB at startup.</pre>
+          
+          
+
+          
+          <div class="method-source-code" id="caches_count_where-source">
+            <pre><span class="ruby-comment"># File lib/cached_counts.rb, line 45</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">caches_count_where</span>(<span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">options</span> = {})
+  <span class="ruby-comment"># Delay actual run to work around circular dependencies</span>
+  <span class="ruby-identifier">klass</span> = <span class="ruby-keyword">self</span>
+  <span class="ruby-constant">ActiveSupport</span>.<span class="ruby-identifier">on_load</span> <span class="ruby-value">:cached_counts</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">klass</span>.<span class="ruby-identifier">send</span> <span class="ruby-value">:caches_count_where!</span>, <span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">options</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-caches_count_where-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">caches_count_where!</span><span
+            class="method-args">(attribute_name, options)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="caches_count_where-21-source">
+            <pre><span class="ruby-comment"># File lib/cached_counts.rb, line 104</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">caches_count_where!</span>(<span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">options</span>)
+  <span class="ruby-identifier">scope_name</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">fetch</span> <span class="ruby-value">:scope</span>, <span class="ruby-identifier">attribute_name</span>
+  <span class="ruby-identifier">relation</span> = <span class="ruby-identifier">send</span>(<span class="ruby-identifier">scope_name</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">scope_name</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{self} does not have a scope named #{scope_name}&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">relation</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">ActiveRecord</span><span class="ruby-operator">::</span><span class="ruby-constant">Relation</span>)
+
+  <span class="ruby-identifier">define_scope_count_attribute</span> <span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">relation</span>, <span class="ruby-identifier">options</span>
+  <span class="ruby-identifier">add_scope_counting_hooks</span> <span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">options</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-default_race_condition_fallback_proc" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">default_race_condition_fallback_proc</span><span
+            class="method-args">(key, relation, options)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="default_race_condition_fallback_proc-source">
+            <pre><span class="ruby-comment"># File lib/cached_counts.rb, line 148</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">default_race_condition_fallback_proc</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">relation</span>, <span class="ruby-identifier">options</span>)
+  <span class="ruby-identifier">fallback</span> = <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">cache</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">key</span>)
+  <span class="ruby-identifier">fallback</span> = <span class="ruby-identifier">fallback</span>.<span class="ruby-identifier">value</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">fallback</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">ActiveSupport</span><span class="ruby-operator">::</span><span class="ruby-constant">Cache</span><span class="ruby-operator">::</span><span class="ruby-constant">Entry</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">fallback</span>.<span class="ruby-identifier">nil?</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-identifier">fallback</span> = <span class="ruby-identifier">relation</span>.<span class="ruby-identifier">count</span>
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">ActiveRecord</span><span class="ruby-operator">::</span><span class="ruby-constant">StatementInvalid</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+      <span class="ruby-identifier">fallback</span> = <span class="ruby-value">0</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">cache</span>.<span class="ruby-identifier">write</span> <span class="ruby-identifier">key</span>, <span class="ruby-identifier">fallback</span>, <span class="ruby-identifier">expires_in</span><span class="ruby-operator">:</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">fetch</span>(<span class="ruby-value">:expires_in</span>, <span class="ruby-value">1</span>.<span class="ruby-identifier">week</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-operator">-</span><span class="ruby-operator">&gt;</span> { <span class="ruby-identifier">fallback</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-define_association_count_attribute" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">define_association_count_attribute</span><span
+            class="method-args">(attribute_name, association, options)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="define_association_count_attribute-source">
+            <pre><span class="ruby-comment"># File lib/cached_counts.rb, line 165</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">define_association_count_attribute</span>(<span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">association</span>, <span class="ruby-identifier">options</span>)
+  <span class="ruby-identifier">options</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">dup</span>
+
+  <span class="ruby-identifier">version</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">fetch</span> <span class="ruby-value">:version</span>, <span class="ruby-value">1</span>
+  <span class="ruby-identifier">key_getter</span> = <span class="ruby-operator">-</span><span class="ruby-operator">&gt;</span> { <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">association_count_key</span>(<span class="ruby-identifier">id</span>, <span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">version</span>) }
+  <span class="ruby-identifier">relation_getter</span> = <span class="ruby-identifier">generate_association_relation_getter</span>(<span class="ruby-identifier">association</span>, <span class="ruby-identifier">options</span>)
+
+  [<span class="ruby-identifier">attribute_name</span>, <span class="ruby-operator">*</span><span class="ruby-constant">Array</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:alias</span>])].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">attr_name</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">define_singleton_method</span> <span class="ruby-node">&quot;#{attr_name}_count_key&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">id</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">association_count_key</span>(<span class="ruby-identifier">id</span>, <span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">version</span>)
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">define_singleton_method</span> <span class="ruby-node">&quot;#{attr_name}_count_for&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">id</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">new</span>({<span class="ruby-identifier">id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">id</span>}, <span class="ruby-identifier">without_protection</span><span class="ruby-operator">:</span> <span class="ruby-keyword">true</span>).<span class="ruby-identifier">send</span>(<span class="ruby-node">&quot;#{attr_name}_count&quot;</span>)
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">add_count_attribute_methods</span>(
+      <span class="ruby-identifier">attr_name</span>,
+      <span class="ruby-identifier">key_getter</span>,
+      <span class="ruby-identifier">relation_getter</span>,
+      <span class="ruby-value">:define_method</span>,
+      <span class="ruby-identifier">association</span>.<span class="ruby-identifier">klass</span>,
+      <span class="ruby-identifier">options</span>
+    )
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-define_scope_count_attribute" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">define_scope_count_attribute</span><span
+            class="method-args">(attribute_name, relation, options)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="define_scope_count_attribute-source">
+            <pre><span class="ruby-comment"># File lib/cached_counts.rb, line 122</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">define_scope_count_attribute</span>(<span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">relation</span>, <span class="ruby-identifier">options</span>)
+  <span class="ruby-identifier">options</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">dup</span>
+
+  <span class="ruby-identifier">version</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">fetch</span> <span class="ruby-value">:version</span>, <span class="ruby-value">1</span>
+  <span class="ruby-identifier">key</span> = <span class="ruby-identifier">scope_count_key</span>(<span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">version</span>)
+
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-value">:race_condition_fallback</span>)
+    <span class="ruby-identifier">options</span>[<span class="ruby-value">:race_condition_fallback</span>] = <span class="ruby-identifier">default_race_condition_fallback_proc</span>(
+      <span class="ruby-identifier">key</span>,
+      <span class="ruby-identifier">relation</span>,
+      <span class="ruby-identifier">options</span>
+    )
+  <span class="ruby-keyword">end</span>
+
+  [<span class="ruby-identifier">attribute_name</span>, <span class="ruby-operator">*</span><span class="ruby-constant">Array</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:alias</span>])].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">attr_name</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">add_count_attribute_methods</span>(
+      <span class="ruby-identifier">attr_name</span>,
+      <span class="ruby-operator">-</span><span class="ruby-operator">&gt;</span> { <span class="ruby-identifier">key</span> },
+      <span class="ruby-operator">-</span><span class="ruby-operator">&gt;</span> { <span class="ruby-identifier">relation</span> },
+      <span class="ruby-value">:define_singleton_method</span>,
+      <span class="ruby-keyword">self</span>,
+      <span class="ruby-identifier">options</span>
+    )
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-generate_association_counting_hook_key_getter" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">generate_association_counting_hook_key_getter</span><span
+            class="method-args">(association, attribute_name, options)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="generate_association_counting_hook_key_getter-source">
+            <pre><span class="ruby-comment"># File lib/cached_counts.rb, line 341</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_association_counting_hook_key_getter</span>(<span class="ruby-identifier">association</span>, <span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">options</span>)
+  <span class="ruby-identifier">version</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">fetch</span> <span class="ruby-value">:version</span>, <span class="ruby-value">1</span>
+  <span class="ruby-identifier">counting_class</span> = <span class="ruby-keyword">self</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">association</span>.<span class="ruby-identifier">through_reflection</span>
+    <span class="ruby-identifier">method_chain</span> = <span class="ruby-identifier">association</span>.<span class="ruby-identifier">chain</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">association</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">if</span> (<span class="ruby-identifier">source</span> = <span class="ruby-identifier">association</span>.<span class="ruby-identifier">source_reflection</span>)
+        <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;Chained associations without `inverse_of` are not supported!&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">source</span>.<span class="ruby-identifier">inverse_of</span>
+        <span class="ruby-identifier">source</span>.<span class="ruby-identifier">inverse_of</span>.<span class="ruby-identifier">name</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">association</span>.<span class="ruby-identifier">foreign_key</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">proc</span> <span class="ruby-keyword">do</span>
+      <span class="ruby-identifier">counter_id</span> = <span class="ruby-identifier">method_chain</span>.<span class="ruby-identifier">inject</span>(<span class="ruby-keyword">self</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">memo</span>, <span class="ruby-identifier">method</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">memo</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">method</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">memo</span>.<span class="ruby-identifier">nil?</span>
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">counter_id</span> = <span class="ruby-identifier">counter_id</span>.<span class="ruby-identifier">id</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">counter_id</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">ActiveRecord</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>)
+
+      <span class="ruby-identifier">counting_class</span>.<span class="ruby-identifier">association_count_key</span> <span class="ruby-identifier">counter_id</span>, <span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">version</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">foreign_key</span> = <span class="ruby-identifier">association</span>.<span class="ruby-identifier">foreign_key</span>
+
+    <span class="ruby-identifier">proc</span> <span class="ruby-keyword">do</span>
+      <span class="ruby-identifier">counting_class</span>.<span class="ruby-identifier">association_count_key</span> <span class="ruby-identifier">send</span>(<span class="ruby-identifier">foreign_key</span>), <span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">version</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-generate_association_relation_getter" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">generate_association_relation_getter</span><span
+            class="method-args">(association, options)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="generate_association_relation_getter-source">
+            <pre><span class="ruby-comment"># File lib/cached_counts.rb, line 372</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_association_relation_getter</span>(<span class="ruby-identifier">association</span>, <span class="ruby-identifier">options</span>)
+  <span class="ruby-identifier">counted_class</span> = <span class="ruby-identifier">association</span>.<span class="ruby-identifier">klass</span>
+  <span class="ruby-identifier">association_name</span> = <span class="ruby-identifier">association</span>.<span class="ruby-identifier">name</span>
+  <span class="ruby-keyword">if</span> (<span class="ruby-identifier">scope_proc</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:scope</span>])
+    <span class="ruby-operator">-</span><span class="ruby-operator">&gt;</span> { <span class="ruby-identifier">send</span>(<span class="ruby-identifier">association_name</span>).<span class="ruby-identifier">spawn</span>.<span class="ruby-identifier">scoping</span> { <span class="ruby-identifier">counted_class</span>.<span class="ruby-identifier">instance_exec</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">scope_proc</span>) } }
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-operator">-</span><span class="ruby-operator">&gt;</span> { <span class="ruby-identifier">send</span>(<span class="ruby-identifier">association_name</span>).<span class="ruby-identifier">spawn</span> }
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-scope_count_key" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">scope_count_key</span><span
+            class="method-args">(attribute_name, version = 1)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="scope_count_key-source">
+            <pre><span class="ruby-comment"># File lib/cached_counts.rb, line 94</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">scope_count_key</span>(<span class="ruby-identifier">attribute_name</span>, <span class="ruby-identifier">version</span> = <span class="ruby-value">1</span>)
+  <span class="ruby-node">&quot;#{name}:#{attribute_name}_count:#{version}&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
