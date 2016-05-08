@@ -26,5 +26,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec"
   s.add_development_dependency "database_cleaner"
   s.add_development_dependency "test_after_commit"
+  s.add_development_dependency "after_commit_exception_notification"
   s.add_development_dependency "rake"
 end

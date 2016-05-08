@@ -24,7 +24,13 @@ end
 # After the DB connection is setup
 require_relative './fixtures.rb'
 require 'database_cleaner'
-require 'test_after_commit'
+
+if Rails.version.to_f < 5.0
+  require 'test_after_commit'
+end
+if Rails.version.to_f < 4.2
+  require 'after_commit_exception_notification'
+end
 
 RSpec.configure do |config|
   config.before(:suite) do
