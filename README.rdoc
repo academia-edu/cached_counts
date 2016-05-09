@@ -8,11 +8,10 @@ cache up to date using incr/decr operations.
 You might prefer this gem over Rails' built-in counter caches when:
 * You want to cache the total number of models for a class or scope
 * You have a large association (e.g. followers of a popular figure) and want to avoid contention on a database row
-* You want your caches to expire and be refreshed to mitigate the risk of getting out of sync
+* You want your caches to occasionally expire and be refreshed to mitigate the risk of getting out of sync
 * You don't need to use counts as part of more complex SQL queries
 
-There are [many alternatives](https://rubygems.org/search?utf8=%E2%9C%93&query=counter+cache),
-but this gem appears to be unique in making use of memcached's incr/decr operations.
+There are {many alternatives}[https://rubygems.org/search?utf8=%E2%9C%93&query=counter+cache], but this gem appears to be unique in its approach. Other gems solve the contention issue by pushing updates to a background job, which has the advantage of continuing to populate a column that can be queried via SQL, but is still more costly than our approach, while introducing a synchronization delay.
 
 = Usage
 
