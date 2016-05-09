@@ -3,6 +3,7 @@ log/*.log
 Gemfile.lock
 incrdecr_cached_counts-*.gem
 pkg/
+html/
 test/dummy/db/*.sqlite3
 test/dummy/db/*.sqlite3-journal
 test/dummy/log/*.log
