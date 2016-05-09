@@ -1,7 +1,0 @@
-Sun, 08 May 2016 14:51:27 -0700
-README.rdoc	Sun, 08 May 2016 14:47:44 -0700
-lib/cached_counts.rb	Sun, 08 May 2016 13:46:22 -0700
-lib/cached_counts/connection_for.rb	Sun, 08 May 2016 09:11:50 -0700
-lib/cached_counts/dalli_check.rb	Sun, 08 May 2016 09:11:40 -0700
-lib/cached_counts/railtie.rb	Sun, 08 May 2016 09:09:01 -0700
-lib/cached_counts/version.rb	Sun, 08 May 2016 07:43:53 -0700
