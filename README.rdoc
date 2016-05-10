@@ -35,12 +35,12 @@ Basic usage:
   class Following < ActiveRecord::Base
     include CachedCounts
 
-    belongs_to :followee, class_name: 'User', # ...
+    belongs_to :followee, class_name: 'User' #, ...
   end
 
-Note that _CachedCounts_ must be included in the counted class, but no class methods need be called there.
+Note that +CachedCounts+ must be included in the counted class, but no class methods need be called there.
 
-For full options, see docs for _CachedCounts.caches_count_of_ and _CachedCounts.caches_count_where_.
+For full options, see docs for +CachedCounts.caches_count_of+ and +CachedCounts.caches_count_where+.
 
 = Licence
 

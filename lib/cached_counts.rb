@@ -14,33 +14,37 @@ module CachedCounts
     # Automatically adds after_commit hooks which increment/decrement the value
     # in memcached when needed. Queries the db on cache miss.
     #
-    # Valid options:
-    #   :scope
-    #     Name of the scope to count. Defaults to the attribute_name
-    #     (the required argument to `caches_count_where`).
+    # @param [String] attribute_name
     #
-    #   :alias
-    #     Alias(es) for the count attribute.
-    #     e.g. `caches_count_where :confirmed, alias: 'sitemap'`
+    # @param [Hash] options
+    #
+    # @option options [String] :scope
+    #   Name of the scope to count. Defaults to the +attribute_name+
+    #   (the required argument to +caches_count_where+).
+    #
+    # @option options [String, Array<String>] :alias
+    #   Alias(es) for the count attribute.
+    #   e.g.
+    #     caches_count_where :confirmed, alias: 'sitemap'
     #     > User.sitemap_count
     #
-    #   :expires_in
-    #     Expiry for the cached value.
+    # @option options [Integer] :expires_in
+    #   Expiry for the cached value.
     #
-    #   :if
-    #     proc passed through to the after_commit hooks;
-    #     decides whether an object counts towards the association total.
+    # @option options [Proc] :if
+    #   proc passed through to the after_commit hooks;
+    #   decides whether an object counts towards the association total.
     #
-    #   :version
-    #     Cache version - bump if you change the definition of a count.
+    # @option options [Integer, #to_s] :version
+    #   Cache version - bump if you change the definition of a count.
     #
-    #   :race_condition_fallback
-    #     Fallback to the result of this proc if the cache is empty, while
-    #     loading the actual value from the db. Works similarly to
-    #     race_condition_ttl but for empty caches rather than expired values.
-    #     Meant to prevent a thundering-herd scenario, if for example a
-    #     memcached instance goes away. Can be nil; defaults to using a value
-    #     grabbed from the cache or DB at startup.
+    # @option options [Proc] :race_condition_fallback
+    #   Fallback to the result of this proc if the cache is empty, while
+    #   loading the actual value from the db. Works similarly to
+    #   +race_condition_ttl+ but for empty caches rather than expired values.
+    #   Meant to prevent a thundering-herd scenario, if for example a
+    #   memcached instance goes away. Can be nil; defaults to using a value
+    #   grabbed from the cache or DB at startup.
     #
     def caches_count_where(attribute_name, options = {})
       # Delay actual run to work around circular dependencies
@@ -60,28 +64,32 @@ module CachedCounts
     # increment/decrement the value in memcached when needed. Queries the db
     # on cache miss.
     #
-    # Valid options:
-    #   :association
-    #     Name of the association to count. Defaults to the attribute_name
-    #     (the required argument to `caches_count_of`).
+    # @param [String] attribute_name
     #
-    #   :alias
-    #     Alias(es) for the count attribute. Useful with join tables.
-    #     e.g. `caches_count_of :user_departments, alias: 'users'`
+    # @param [Hash] options
+    #
+    # @option options [Symbol] :association
+    #   Name of the association to count. Defaults to the +attribute_name+
+    #   (the required argument to +caches_count_of+).
+    #
+    # @option options [String, Array<String>] :alias
+    #   Alias(es) for the count attribute. Useful with join tables.
+    #   e.g.
+    #     caches_count_of :user_departments, alias: 'users'
     #     > Department.first.users_count
     #
-    #   :expires_in
-    #     Expiry for the cached value.
+    # @option options [Integer] :expires_in
+    #   Expiry for the cached value.
     #
-    #   :if
-    #     proc passed through to the after_commit hooks on the counted class;
-    #     decides whether an object counts towards the association total.
+    # @option options [Proc] :if
+    #   proc passed through to the after_commit hooks on the counted class;
+    #   decides whether an object counts towards the association total.
     #
-    #   :scope
-    #     proc used like an ActiveRecord scope on the counted class on cache misses.
+    # @option options [Proc] :scope
+    #   proc used like an ActiveRecord scope on the counted class on cache misses.
     #
-    #   :version
-    #     Cache version - bump if you change the definition of a count.
+    # @option options [Integer, #to_s] :version
+    #   Cache version - bump if you change the definition of a count.
     #
     def caches_count_of(attribute_name, options = {})
       # Delay actual run to work around circular dependencies
@@ -91,10 +99,12 @@ module CachedCounts
       end
     end
 
+    # @private
     def scope_count_key(attribute_name, version = 1)
       "#{name}:#{attribute_name}_count:#{version}"
     end
 
+    # @private
     def association_count_key(counter_id, attribute_name, version = 1)
       "#{name}:#{counter_id}:#{attribute_name}_count:#{version}" unless counter_id.nil?
     end
