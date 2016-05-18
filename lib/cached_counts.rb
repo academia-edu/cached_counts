@@ -1,6 +1,7 @@
 require 'cached_counts/dalli_check'
 require 'cached_counts/connection_for'
 
+# A mixin that provides two class methods: +caches_count_where+ and +caches_count_of+.
 module CachedCounts
   extend ActiveSupport::Concern
 
