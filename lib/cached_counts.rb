@@ -215,7 +215,7 @@ module CachedCounts
       key_getter = generate_association_counting_hook_key_getter association, attribute_name, options
 
       add_counting_hooks(
-        "#{name.demodulize.underscore}_#{attribute_name}",
+        "#{name.underscore.gsub(%r{/}, '__')}_#{attribute_name}",
         key_getter,
         association.klass,
         options
