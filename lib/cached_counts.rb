@@ -166,7 +166,7 @@ module CachedCounts
           fallback = 0
         end
 
-        Rails.cache.write key, fallback, expires_in: options.fetch(:expires_in, 1.week)
+        Rails.cache.write key, fallback, expires_in: options.fetch(:expires_in, 1.week), raw: true
       end
 
       -> { fallback }
@@ -241,7 +241,7 @@ module CachedCounts
             # Ensure that other reads find something in the cache, but
             # continue calculating here because the default is likely inaccurate.
             fallback_value = instance_exec &race_condition_fallback
-            Rails.logger.warn "[cached_counts]: Setting #{fallback_value} as race_condition_fallback for #{send(key_method)}"
+            logger.warn "Setting #{fallback_value} as race_condition_fallback for #{send(key_method)}"
             Rails.cache.write(
               send(key_method),
               fallback_value.to_i,
@@ -394,6 +394,17 @@ module CachedCounts
         -> { send(association_name).spawn.scoping { counted_class.instance_exec(&scope_proc) } }
       else
         -> { send(association_name).spawn }
+      end
+    end
+
+    def logger
+      @logger ||= begin
+        if Rails.logger.nil?
+          require 'logger'
+          Logger.new($stderr)
+        else
+          Rails.logger
+        end
       end
     end
   end
