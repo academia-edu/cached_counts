@@ -241,6 +241,7 @@ module CachedCounts
             # Ensure that other reads find something in the cache, but
             # continue calculating here because the default is likely inaccurate.
             fallback_value = instance_exec &race_condition_fallback
+            Rails.logger.warn "[cached_counts]: Setting #{fallback_value} as race_condition_fallback for #{send(key_method)}"
             Rails.cache.write(
               send(key_method),
               fallback_value.to_i,
