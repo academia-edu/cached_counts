@@ -39,13 +39,11 @@ module CachedCounts
     # @option options [Integer, #to_s] :version
     #   Cache version - bump if you change the definition of a count.
     #
-    # @option options [Proc] :race_condition_fallback
-    #   Fallback to the result of this proc if the cache is empty, while
-    #   loading the actual value from the db. Works similarly to
-    #   +race_condition_ttl+ but for empty caches rather than expired values.
-    #   Meant to prevent a thundering-herd scenario, if for example a
-    #   memcached instance goes away. Can be nil; defaults to using a value
-    #   grabbed from the cache or DB at startup.
+    # @option options [Lambda] :default_value_lambda
+    #   Uses this value when the cache is empty, while it is being populated
+    #
+    # @option options [Lambda] :value_updater_lambda
+    #   Override logic for updating a cache value - e.g. to perform background updates
     #
     def caches_count_where(attribute_name, options = {})
       # Delay actual run to work around circular dependencies
@@ -136,14 +134,6 @@ module CachedCounts
       version = options.fetch :version, 1
       key = scope_count_key(attribute_name, version)
 
-      unless options.has_key?(:race_condition_fallback)
-        options[:race_condition_fallback] = default_race_condition_fallback_proc(
-          key,
-          relation,
-          options
-        )
-      end
-
       [attribute_name, *Array(options[:alias])].each do |attr_name|
         add_count_attribute_methods(
           attr_name,
@@ -154,23 +144,6 @@ module CachedCounts
           options
         )
       end
-    end
-
-    def default_race_condition_fallback_proc(key, relation, options)
-      fallback = Rails.cache.read(key)
-      fallback = fallback.value if fallback.is_a?(ActiveSupport::Cache::Entry)
-
-      if fallback.nil?
-        begin
-          fallback = relation.count
-        rescue ActiveRecord::StatementInvalid => e
-          fallback = 0
-        end
-
-        Rails.cache.write key, fallback, expires_in: options.fetch(:expires_in, 1.week), raw: true
-      end
-
-      -> { fallback }
     end
 
     def define_association_count_attribute(attribute_name, association, options)
@@ -225,7 +198,12 @@ module CachedCounts
 
     def add_count_attribute_methods(attribute_name, key_getter, relation_getter, define_with, counted_class, options)
       expires_in = options.fetch :expires_in, 1.week
-      race_condition_fallback = options.fetch :race_condition_fallback, nil
+      default_value_lambda = options.fetch :default_value_lambda, -> {0}
+      value_updater_lambda = options.fetch :value_updater_lambda, default_value_updater_lambda
+      # TODO: need a good strategy to figure this value out
+      # As a fallback value is used, we immediately fire the calculation for the real value
+      # Is it reasonable to wait as long as it takes to calcualte it? Is there an alternative?
+      fallback_expiry_seconds = expires_in
 
       key_method = "#{attribute_name}_count_key"
 
@@ -235,34 +213,23 @@ module CachedCounts
         val = Rails.cache.fetch(
           send(key_method),
           expires_in: expires_in,
-          race_condition_ttl: 30.seconds,
+          race_condition_ttl: fallback_expiry_seconds,
           raw: true # Necessary for incrementing to work correctly
         ) do
-          if race_condition_fallback
-            # Ensure that other reads find something in the cache, but
-            # continue calculating here because the default is likely inaccurate.
-            fallback_value = instance_exec &race_condition_fallback
-            CachedCounts.logger.warn "Setting #{fallback_value} as race_condition_fallback for #{send(key_method)}"
-            Rails.cache.write(
-              send(key_method),
-              fallback_value.to_i,
-              expires_in: 30.seconds,
-              raw: true
-            )
-          end
-
+          # Write down the default value first so subsequent reads don't repeat calculations
+          # TODO: multiple requests can potentially get to this point and start multiple update operations? Is that a problem?
+          default_value = instance_exec &default_value_lambda
+          Rails.cache.write(
+            send(key_method),
+            default_value,
+            expires_in: fallback_expiry_seconds,
+            raw: true
+          )
           relation = instance_exec(&relation_getter)
           relation = relation.reorder('')
           relation.select_values = ['count(*)']
-
-          conn = CachedCounts.connection_for(counted_class)
-          if Rails.version < '4.2'.freeze
-            conn.select_value(relation.to_sql, nil, relation.values[:bind] || []).to_i
-          else
-            conn.select_value(relation.to_sql).to_i
-          end
+          value_updater_lambda.call(counted_class, relation.to_sql, send(key_method), expires_in) || default_value
         end
-
         if val.is_a?(ActiveSupport::Cache::Entry)
           val.value.to_i
         else
@@ -282,6 +249,20 @@ module CachedCounts
       send define_with, "expire_#{attribute_name}_count" do
         Rails.cache.delete send(key_method)
       end
+    end
+
+    def default_value_updater_lambda()
+      lambda { |counted_class, relation_sql, cache_key, expires_in|
+        conn = CachedCounts.connection_for(counted_class)
+        value = conn.select_value(relation_sql).to_i
+        Rails.cache.write(
+          cache_key,
+          value,
+          expires_in: expires_in,
+          raw: true
+        )
+        return value
+      }
     end
 
     def add_counting_hooks(attribute_name, key_getter, counted_class, options)
