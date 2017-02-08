@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.authors     = ["David Judd"]
   s.email       = ["david@academia.edu"]
   s.homepage    = "https://github.com/academia-edu/cached_counts"
-  s.summary     = "A replacement for Rails' counter caches using memcached (via Dalli)"
-  s.description = "A replacement for Rails' counter caches using memcached increment & decrement operations, implemented via after_commit hooks and the Dalli gem"
+  s.summary     = "A replacement for Rails' counter caches using memcached (via Dalli or Readthis)"
+  s.description = "A replacement for Rails' counter caches using memcached increment & decrement operations, implemented via after_commit hooks and the Dalli or Readthis gem"
   s.license     = "MIT"
 
   s.files         = `git ls-files`.split("\n")
@@ -20,9 +20,10 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency "rails", ">= 4.0"
-  s.add_dependency "dalli"
 
   s.add_development_dependency "sqlite3"
+  s.add_development_dependency "dalli"
+  s.add_development_dependency "readthis"
   s.add_development_dependency "rspec"
   s.add_development_dependency "database_cleaner"
   s.add_development_dependency "test_after_commit"

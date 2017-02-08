@@ -3,7 +3,6 @@ require 'bundler/setup'
 require 'pry'
 require 'active_record'
 require 'rails'
-require 'active_support/cache/dalli_store'
 require 'cached_counts'
 
 ActiveRecord::Base.configurations = YAML::load_file('spec/database.yml')
@@ -13,7 +12,14 @@ if ActiveRecord::Base.respond_to?(:raise_in_transactional_callbacks)
   ActiveRecord::Base.raise_in_transactional_callbacks = true
 end
 
-Rails.cache = ActiveSupport::Cache::DalliStore.new("localhost")
+case ENV["CACHE_BACKEND"]
+when /readthis/i
+  require 'readthis'
+  Rails.cache = Readthis::Cache.new
+else
+  require 'active_support/cache/dalli_store'
+  Rails.cache = ActiveSupport::Cache::DalliStore.new
+end
 
 RSpec.configure do |config|
   config.before(:each) do
