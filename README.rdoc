@@ -1,8 +1,8 @@
 = CachedCounts
 
-A replacement for Rails' counter caches, using memcached.
+A replacement for Rails' counter caches, using memcached or Redis.
 
-Caches counts of models in a scope or association in memcached, and keeps the
+Caches counts of models in a scope or association in memcached or Redis, and keeps the
 cache up to date using incr/decr operations.
 
 You might prefer this gem over Rails' built-in counter caches when:
