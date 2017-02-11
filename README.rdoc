@@ -1,5 +1,7 @@
 = CachedCounts
 
+Build status: [![CircleCI](https://circleci.com/gh/academia-edu/cached_counts.svg?style=svg)](https://circleci.com/gh/academia-edu/cached_counts)
+
 A replacement for Rails' counter caches, using memcached.
 
 Caches counts of models in a scope or association in memcached, and keeps the
