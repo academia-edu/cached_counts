@@ -7,4 +7,4 @@ dependencies:
     - curl -fsSL https://git.io/v2Ifn | bash
 
 database:
-  override:
+  override: []
