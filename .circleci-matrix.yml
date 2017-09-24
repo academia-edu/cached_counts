@@ -1,8 +1,0 @@
-env:
-  - ACTIVERECORD_VERSION=4.2.6
-  - ACTIVERECORD_VERSION=4.1.15
-  - ACTIVERECORD_VERSION=4.0.13
-
-command:
-  - rm -f Gemfile.lock && ACTIVERECORD_VERSION=$ACTIVERECORD_VERSION bundle
-  - bundle exec rake
