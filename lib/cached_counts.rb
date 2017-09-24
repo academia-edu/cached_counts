@@ -266,7 +266,7 @@ module CachedCounts
     end
 
     def add_counting_hooks(attribute_name, key_getter, counted_class, options)
-      increment_hook = "increment_#{attribute_name}_count"
+      increment_hook = "increment_#{attribute_name}_count".to_sym
       counted_class.send :define_method, increment_hook do
         if (key = instance_exec &key_getter)
           Rails.cache.increment(
@@ -277,7 +277,7 @@ module CachedCounts
         end
       end
 
-      decrement_hook = "decrement_#{attribute_name}_count"
+      decrement_hook = "decrement_#{attribute_name}_count".to_sym
       counted_class.send :define_method, decrement_hook do
         if (key = instance_exec &key_getter)
           Rails.cache.decrement(
