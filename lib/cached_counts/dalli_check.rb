@@ -1,5 +1,7 @@
 if defined?(Rails)
   ActiveSupport.on_load :cached_counts do
-    raise "CachedCounts depends on Dalli!" unless Rails.cache.respond_to?(:dalli)
+    unless Rails.cache.respond_to?(:dalli) || (defined?(Dalli::Client) && Rails.cache.instance_variable_get(:@data).is_a?(Dalli::Client))
+      raise "CachedCounts depends on Dalli!"
+    end
   end
 end
