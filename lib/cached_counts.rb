@@ -158,6 +158,18 @@ module CachedCounts
           association_count_key(id, attribute_name, version)
         end
 
+        # Try to fetch values for ids from the cache. If it's a miss return the default value
+        define_singleton_method "try_#{attr_name}_counts_for" do |ids, default=nil|
+          raw_result = Rails.cache.read_multi(*ids.map{|id| association_count_key(id, attribute_name, version)})
+
+          result = {}
+          ids.each do |id|
+            result[id] = raw_result[association_count_key(id, attribute_name, version)]&.to_i || default
+          end
+    
+          result
+        end
+
         define_singleton_method "#{attr_name}_count_for" do |id|
           new({id: id}, without_protection: true).send("#{attr_name}_count")
         end
