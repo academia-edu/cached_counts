@@ -193,7 +193,7 @@ module CachedCounts
           ids.each do |id|
             result[id] = raw_result[association_count_key(id, attribute_name, version)]&.to_i || default
           end
-    
+
           result
         end
 
@@ -268,11 +268,7 @@ module CachedCounts
           relation.select_values = ['count(*)']
 
           conn = CachedCounts.connection_for(counted_class)
-          if Rails.version < '4.2'.freeze
-            conn.select_value(relation.to_sql, nil, relation.values[:bind] || []).to_i
-          else
-            conn.select_value(relation.to_sql).to_i
-          end
+          conn.select_value(relation.to_sql).to_i
         end
 
         if val.is_a?(ActiveSupport::Cache::Entry)

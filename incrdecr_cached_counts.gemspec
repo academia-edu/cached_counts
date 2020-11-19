@@ -19,13 +19,11 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency "rails", ">= 4.2"
+  s.add_dependency "rails", ">= 5.2"
   s.add_dependency "dalli"
 
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "rspec"
   s.add_development_dependency "database_cleaner"
-  s.add_development_dependency "test_after_commit"
-  s.add_development_dependency "after_commit_exception_notification"
   s.add_development_dependency "rake"
 end
