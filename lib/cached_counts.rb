@@ -1,6 +1,6 @@
 require 'cached_counts/logger'
 require 'cached_counts/dalli_check'
-require 'cached_counts/connection_for'
+require 'cached_counts/query_context'
 
 module CachedCounts
   extend ActiveSupport::Concern
@@ -267,8 +267,9 @@ module CachedCounts
           relation = relation.reorder('')
           relation.select_values = ['count(*)']
 
-          conn = CachedCounts.connection_for(counted_class)
-          conn.select_value(relation.to_sql).to_i
+          CachedCounts.query_context.call(counted_class) do
+            counted_class.connection.select_value(relation.to_sql).to_i
+          end
         end
 
         if val.is_a?(ActiveSupport::Cache::Entry)
