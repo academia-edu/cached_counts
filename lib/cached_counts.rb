@@ -1,5 +1,4 @@
 require 'cached_counts/logger'
-require 'cached_counts/dalli_check'
 require 'cached_counts/query_context'
 
 module CachedCounts
