@@ -157,11 +157,7 @@ module CachedCounts
     def default_race_condition_fallback_proc(key, options)
       fallback = Rails.cache.read(key)
       fallback = fallback.value if fallback.is_a?(ActiveSupport::Cache::Entry)
-
-      if fallback.nil?
-        fallback = 0
-        Rails.cache.write key, fallback, expires_in: options.fetch(:expires_in, 1.week), raw: true
-      end
+      fallback = 0 if fallback.nil?
 
       -> { fallback }
     end
