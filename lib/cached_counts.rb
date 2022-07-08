@@ -113,8 +113,10 @@ module CachedCounts
 
     def caches_count_where!(attribute_name, options)
       scope_name = options.fetch :scope, attribute_name
+      relation = send(scope_name) if respond_to?(scope_name)
+      raise "#{self} does not have a scope named #{scope_name}" unless relation.is_a?(ActiveRecord::Relation)
 
-      define_scope_count_attribute attribute_name, scope_name, options
+      define_scope_count_attribute attribute_name, relation, options
       add_scope_counting_hooks attribute_name, options
     end
 
@@ -127,7 +129,7 @@ module CachedCounts
       add_association_counting_hooks attribute_name, association, options
     end
 
-    def define_scope_count_attribute(attribute_name, scope_name, options)
+    def define_scope_count_attribute(attribute_name, relation, options)
       options = options.dup
 
       version = options.fetch :version, 1
@@ -140,13 +142,11 @@ module CachedCounts
         )
       end
 
-      klass = self
-
       [attribute_name, *Array(options[:alias])].each do |attr_name|
         add_count_attribute_methods(
           attr_name,
           -> { key },
-          -> { klass.send(scope_name) },
+          -> { relation },
           :define_singleton_method,
           self,
           options
