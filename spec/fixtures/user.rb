@@ -21,8 +21,6 @@ class User < ActiveRecord::Base
   caches_count_where :confirmed, if: :confirmed?
   caches_count_where :unconfirmed, if: ->{ !confirmed? }, alias: :spammer
 
-  caches_count_where :unvalidated, scope: :unconfirmed, if: ->{ !confirmed? }
-
   caches_count_of :follower_joins, alias: :followers
 
 end
