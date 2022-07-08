@@ -69,6 +69,10 @@ describe 'caches_count_where' do
     expect(User.spammer_count).to eq(1)
   end
 
+  it 'supports specifying a scope with a different name' do
+    expect(User.unvalidated_count).to eq(1)
+  end
+
   it 'falls back to value saved on load when cache is empty' do
     allow(User.unconfirmed).to receive(:count) do
       # 2nd caller, while calculation is proceeding for first caller, should

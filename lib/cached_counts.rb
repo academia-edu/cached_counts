@@ -113,10 +113,8 @@ module CachedCounts
 
     def caches_count_where!(attribute_name, options)
       scope_name = options.fetch :scope, attribute_name
-      relation = send(scope_name) if respond_to?(scope_name)
-      raise "#{self} does not have a scope named #{scope_name}" unless relation.is_a?(ActiveRecord::Relation)
 
-      define_scope_count_attribute attribute_name, relation, options
+      define_scope_count_attribute attribute_name, scope_name, options
       add_scope_counting_hooks attribute_name, options
     end
 
@@ -129,7 +127,7 @@ module CachedCounts
       add_association_counting_hooks attribute_name, association, options
     end
 
-    def define_scope_count_attribute(attribute_name, relation, options)
+    def define_scope_count_attribute(attribute_name, scope_name, options)
       options = options.dup
 
       version = options.fetch :version, 1
@@ -138,16 +136,17 @@ module CachedCounts
       unless options.has_key?(:race_condition_fallback)
         options[:race_condition_fallback] = default_race_condition_fallback_proc(
           key,
-          relation,
           options
         )
       end
+
+      klass = self
 
       [attribute_name, *Array(options[:alias])].each do |attr_name|
         add_count_attribute_methods(
           attr_name,
           -> { key },
-          -> { relation },
+          -> { klass.send(scope_name) },
           :define_singleton_method,
           self,
           options
@@ -155,17 +154,12 @@ module CachedCounts
       end
     end
 
-    def default_race_condition_fallback_proc(key, relation, options)
+    def default_race_condition_fallback_proc(key, options)
       fallback = Rails.cache.read(key)
       fallback = fallback.value if fallback.is_a?(ActiveSupport::Cache::Entry)
 
       if fallback.nil?
-        begin
-          fallback = relation.count
-        rescue ActiveRecord::StatementInvalid => e
-          fallback = 0
-        end
-
+        fallback = 0
         Rails.cache.write key, fallback, expires_in: options.fetch(:expires_in, 1.week), raw: true
       end
 
