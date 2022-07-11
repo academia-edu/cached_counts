@@ -135,13 +135,6 @@ module CachedCounts
       version = options.fetch :version, 1
       key = scope_count_key(attribute_name, version)
 
-      unless options.has_key?(:race_condition_fallback)
-        options[:race_condition_fallback] = default_race_condition_fallback_proc(
-          key,
-          options
-        )
-      end
-
       [attribute_name, *Array(options[:alias])].each do |attr_name|
         add_count_attribute_methods(
           attr_name,
@@ -152,14 +145,6 @@ module CachedCounts
           options
         )
       end
-    end
-
-    def default_race_condition_fallback_proc(key, options)
-      fallback = Rails.cache.read(key)
-      fallback = fallback.value if fallback.is_a?(ActiveSupport::Cache::Entry)
-      fallback = 0 if fallback.nil?
-
-      -> { fallback }
     end
 
     def define_association_count_attribute(attribute_name, association, options)
