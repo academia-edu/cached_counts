@@ -135,6 +135,14 @@ module CachedCounts
       version = options.fetch :version, 1
       key = scope_count_key(attribute_name, version)
 
+      unless options.has_key?(:race_condition_fallback)
+        options[:race_condition_fallback] = default_race_condition_fallback_proc(
+          key,
+          relation,
+          options
+        )
+      end
+
       [attribute_name, *Array(options[:alias])].each do |attr_name|
         add_count_attribute_methods(
           attr_name,
@@ -145,6 +153,13 @@ module CachedCounts
           options
         )
       end
+    end
+
+    def default_race_condition_fallback_proc(key, relation, options)
+      fallback = Rails.cache.read(key)
+      fallback = fallback.value if fallback.is_a?(ActiveSupport::Cache::Entry)
+
+      -> { fallback }
     end
 
     def define_association_count_attribute(attribute_name, association, options)
@@ -228,13 +243,16 @@ module CachedCounts
             # Ensure that other reads find something in the cache, but
             # continue calculating here because the default is likely inaccurate.
             fallback_value = instance_exec &race_condition_fallback
-            CachedCounts.logger.warn "Setting #{fallback_value} as race_condition_fallback for #{send(key_method)}"
-            Rails.cache.write(
-              send(key_method),
-              fallback_value.to_i,
-              expires_in: 30.seconds,
-              raw: true
-            )
+
+            if fallback_value
+              CachedCounts.logger.warn "Setting #{fallback_value} as race_condition_fallback for #{send(key_method)}"
+              Rails.cache.write(
+                send(key_method),
+                fallback_value.to_i,
+                expires_in: 30.seconds,
+                raw: true
+              )
+            end
           end
 
           relation = instance_exec(&relation_getter)
