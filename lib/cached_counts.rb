@@ -159,16 +159,6 @@ module CachedCounts
       fallback = Rails.cache.read(key)
       fallback = fallback.value if fallback.is_a?(ActiveSupport::Cache::Entry)
 
-      if fallback.nil?
-        begin
-          fallback = relation.count
-        rescue ActiveRecord::StatementInvalid => e
-          fallback = 0
-        end
-
-        Rails.cache.write key, fallback, expires_in: options.fetch(:expires_in, 1.week), raw: true
-      end
-
       -> { fallback }
     end
 
@@ -253,13 +243,16 @@ module CachedCounts
             # Ensure that other reads find something in the cache, but
             # continue calculating here because the default is likely inaccurate.
             fallback_value = instance_exec &race_condition_fallback
-            CachedCounts.logger.warn "Setting #{fallback_value} as race_condition_fallback for #{send(key_method)}"
-            Rails.cache.write(
-              send(key_method),
-              fallback_value.to_i,
-              expires_in: 30.seconds,
-              raw: true
-            )
+
+            if fallback_value
+              CachedCounts.logger.warn "Setting #{fallback_value} as race_condition_fallback for #{send(key_method)}"
+              Rails.cache.write(
+                send(key_method),
+                fallback_value.to_i,
+                expires_in: 30.seconds,
+                raw: true
+              )
+            end
           end
 
           relation = instance_exec(&relation_getter)
