@@ -156,7 +156,7 @@ module CachedCounts
     end
 
     def default_race_condition_fallback_proc(key, relation, options)
-      fallback = Rails.cache.read(key)
+      fallback = Rails.cache.read(key, raw: true)
       fallback = fallback.value if fallback.is_a?(ActiveSupport::Cache::Entry)
 
       -> { fallback }
@@ -176,7 +176,7 @@ module CachedCounts
 
         # Try to fetch values for ids from the cache. If it's a miss return the default value
         define_singleton_method "try_#{attr_name}_counts_for" do |ids, default=nil|
-          raw_result = Rails.cache.read_multi(*ids.map{|id| association_count_key(id, attribute_name, version)})
+          raw_result = Rails.cache.read_multi(*ids.map{|id| association_count_key(id, attribute_name, version)}, raw: true)
 
           result = {}
           ids.each do |id|
