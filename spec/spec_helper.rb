@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'bundler/setup'
-require 'pry'
 require 'active_record'
 require 'rails'
 require 'active_support/cache/mem_cache_store'
