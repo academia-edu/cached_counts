@@ -10,7 +10,7 @@ case rails_version
 when "default"
   # Allow the gemspec to specify
 else
-  gem "activerecord", "~> #{rails_version}", group: [:development, :test]
+  gem "activerecord", "~> #{rails_version}"
 
   if Gem::Version.new(rails_version) >= Gem::Version.new("8.0")
     gem "sqlite3", "~> 2.6"
