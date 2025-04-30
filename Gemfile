@@ -5,14 +5,14 @@ source 'https://rubygems.org'
 # development dependencies will be added by default to the :development group.
 gemspec
 
-ar_version = ENV["ACTIVERECORD_VERSION"] || "default"
-case ar_version
+rails_version = ENV["RAILS_VERSION"] || "default"
+case rails_version
 when "default"
   # Allow the gemspec to specify
 else
-  gem "activerecord", "~> #{ar_version}", group: [:development, :test]
+  gem "activerecord", "~> #{rails_version}", group: [:development, :test]
 
-  if Gem::Version.new(ar_version) >= Gem::Version.new("8.0")
+  if Gem::Version.new(rails_version) >= Gem::Version.new("8.0")
     gem "sqlite3", "~> 2.6"
   else
     gem "sqlite3", "~> 1.7"

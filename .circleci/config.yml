@@ -22,7 +22,7 @@ jobs:
           name: Bundle install
           command: bundle install
           environment:
-            ACTIVERECORD_VERSION: << parameters.rails-version >>
+            RAILS_VERSION: << parameters.rails-version >>
       - save_cache:
           key: rails-<< parameters.rails-version >>-{{ checksum "Gemfile" }}
           paths:
@@ -31,7 +31,7 @@ jobs:
           name: Test with Rails << parameters.rails-version >>
           command: bundle exec rspec
           environment:
-            ACTIVERECORD_VERSION: << parameters.rails-version >>
+            RAILS_VERSION: << parameters.rails-version >>
 
 workflows:
   test-all-rails-versions:
