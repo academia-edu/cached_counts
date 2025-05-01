@@ -22,7 +22,6 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", ">= 7.0"
   s.add_dependency "dalli"
 
-  s.add_development_dependency "concurrent-ruby", "1.3.4"
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "rspec"
   s.add_development_dependency "database_cleaner"

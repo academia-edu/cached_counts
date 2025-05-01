@@ -1,5 +1,12 @@
 require 'rubygems'
 require 'bundler/setup'
+
+# This is a workaround for https://github.com/rails/rails/issues/54260.
+# It can be removed when we stop supporting Rails 7.0.
+if Gem::Specification.find_by_name('rails').version < Gem::Version.new('7.1')
+  require 'logger'
+end
+
 require 'active_record'
 require 'rails'
 require 'active_support/cache/mem_cache_store'
