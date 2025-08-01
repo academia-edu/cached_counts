@@ -1,50 +1,73 @@
 require 'cached_counts/logger'
 require 'cached_counts/query_context'
 
+# A mixin that provides two class methods: +caches_count_where+ and +caches_count_of+.
 module CachedCounts
   extend ActiveSupport::Concern
 
   module ClassMethods
-    # Cache the count for a scope in memcached.
+    # Cache the count for a scope in Memcached.
     #
-    # e.g.
-    #   User.caches_count_where :confirmed
-    #   > User.confirmed_count # User.confirmed.count, but cached
+    # For example, if you have a model:
+    #   class Post < ActiveRecord::Base
+    #     include CachedCounts
+    #     scope :sponsored, -> { where(sponsored: true) }
+    #     caches_count_where :sponsored, if: :sponsored?
+    #   end
     #
-    # Automatically adds after_commit hooks which increment/decrement the value
-    # in memcached when needed. Queries the db on cache miss.
+    # Then you can call
+    #   Post.sponsored_count
+    # to fetch the number of sponsored posts from Memcached.
+    #
+    # Defines a few class methods:
+    # [+#{attribute_name}_count+]
+    #   The number of models in the scope.
+    # [+#{attribute_name}_count_key+]
+    #   The key in Memcached that stores the count.
+    # [+expire_#{attribute_name}_count+]
+    #   Deletes the key from Memcached.
+    # [+#{attribute_name}_count=(value)+]
+    #   Sets the value of the count. (Should be necessary only for testing.)
+    #
+    # And a few instance methods:
+    # [+increment_#{attribute_name}_count+]
+    #   Increments the count if it already exists. (Should be necessary only for testing.)
+    # [+decrement_#{attribute_name}_count+]
+    #   Decrements the count if it already exists. (Should be necessary only for testing.)
     #
     # @param [String] attribute_name
+    #   The name that appears in generated method names.
     #
     # @param [Hash] options
     #
     # @option options [String] :scope
-    #   Name of the scope to count. Defaults to the +attribute_name+
-    #   (the required argument to +caches_count_where+).
+    #   Name of the scope to count. Defaults to the +attribute_name+.
+    #
+    # @option options [Proc, Symbol] :if
+    #   Proc that decides whether an object is included in the count. (This must
+    #   be equivalent to +:scope+.)
     #
     # @option options [String, Array<String>] :alias
-    #   Alias(es) for the count attribute.
-    #   e.g.
-    #     caches_count_where :confirmed, alias: 'sitemap'
-    #     > User.sitemap_count
+    #   Alias(es) for the count attribute. For example:
+    #     class Post < ActiveRecord::Base
+    #       # ...
+    #       caches_count_where :sponsored, alias: 'paid'
+    #     end
+    #
+    #     Post.paid_count
     #
     # @option options [Integer] :expires_in
     #   Expiry for the cached value.
-    #
-    # @option options [Proc] :if
-    #   proc passed through to the after_commit hooks;
-    #   decides whether an object counts towards the association total.
     #
     # @option options [Integer, #to_s] :version
     #   Cache version - bump if you change the definition of a count.
     #
     # @option options [Proc] :race_condition_fallback
-    #   Fallback to the result of this proc if the cache is empty, while
-    #   loading the actual value from the db. Works similarly to
-    #   +race_condition_ttl+ but for empty caches rather than expired values.
-    #   Meant to prevent a thundering-herd scenario, if for example a
-    #   memcached instance goes away. Can be nil; defaults to using a value
-    #   grabbed from the cache or DB at startup.
+    #   On cache miss, first write the result of this proc to the cache (to
+    #   prevent a thundering herd), and then perform the count and update the
+    #   cache.
+    #
+    #   Defaults to a value grabbed from the cache or the database at startup.
     #
     def caches_count_where(attribute_name, options = {})
       # Delay actual run to work around circular dependencies
@@ -54,39 +77,74 @@ module CachedCounts
       end
     end
 
-    # Cache the count for an association in memcached.
+    # Cache the count for an association in Memcached.
     #
-    # e.g.
-    #   User.caches_count_of :friends
-    #   > User.first.friends_count # Users.first.friends.count, but cached
+    # For example, if you have two associated models:
+    #   class Post < ActiveRecord::Base
+    #     include CachedCounts
+    #     has_many :comments
+    #     caches_count_of :comments
+    #   end
     #
-    # Automatically adds after_commit hooks to the associated class which
-    # increment/decrement the value in memcached when needed. Queries the db
-    # on cache miss.
+    #   class Comment < ActiveRecord::Base
+    #     include CachedCounts
+    #     belongs_to :post
+    #   end
+    #
+    # Then you can call
+    #   Post.first.comments_count
+    # to fetch the number of comments on the first post from Memcached. Note
+    # that the associated class must +include CachedCounts+ also.
+    #
+    # Defines a few instance methods:
+    # [+#{attribute_name}_count+]
+    #   The number of models in the association.
+    # [+#{attribute_name}_count_key+]
+    #   The key in Memcached that stores the count.
+    # [+expire_#{attribute_name}_count+]
+    #   Deletes the key from Memcached.
+    # [+#{attribute_name}_count=(value)+]
+    #   Sets the value of the count. (Should be necessary only for testing.)
+    #
+    # And a few class methods:
+    # [+#{attribute_name}_count_for(id)+]
+    #   The number of models associated with the given +id+.
+    # [+#{attribute_name}_count_key(id)+]
+    #   The key in Memcached that stores the count for the given +id+.
+    #
+    # And a few instance methods on the associated class:
+    # [+increment_#{klass.name.demodulize.underscore}_#{attribute_name}_count+]
+    #   Increments the count if it already exists. (Should be necessary only for testing.)
+    # [+decrement_#{klass.name.demodulize.underscore}_#{attribute_name}_count+]
+    #   Decrements the count if it already exists. (Should be necessary only for testing.)
     #
     # @param [String] attribute_name
+    #   The name that appears in the generated method names.
     #
     # @param [Hash] options
     #
     # @option options [Symbol] :association
-    #   Name of the association to count. Defaults to the +attribute_name+
-    #   (the required argument to +caches_count_of+).
+    #   Name of the association to count. Defaults to the +attribute_name+.
     #
     # @option options [String, Array<String>] :alias
-    #   Alias(es) for the count attribute. Useful with join tables.
-    #   e.g.
-    #     caches_count_of :user_departments, alias: 'users'
-    #     > Department.first.users_count
+    #   Alias(es) for the count attribute. For example:
+    #     class Post < ActiveRecord::Base
+    #       # ...
+    #       caches_count_of :comments, alias: 'replies'
+    #     end
+    #
+    #     Post.first.replies_count
     #
     # @option options [Integer] :expires_in
     #   Expiry for the cached value.
     #
-    # @option options [Proc] :if
-    #   proc passed through to the after_commit hooks on the counted class;
-    #   decides whether an object counts towards the association total.
+    # @option options [Proc, Symbol] :if
+    #   Proc that decides whether an object is included in the count. (Must be
+    #   equivalent to +:scope+.)
     #
     # @option options [Proc] :scope
-    #   proc used like an ActiveRecord scope on the counted class on cache misses.
+    #   Proc used like an ActiveRecord scope to decide which objects are
+    #   included in the count. (Must be equivalent to +:if+.)
     #
     # @option options [Integer, #to_s] :version
     #   Cache version - bump if you change the definition of a count.
