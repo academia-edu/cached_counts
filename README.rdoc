@@ -1,6 +1,6 @@
 = CachedCounts
 
-{<img src="https://github.com/academia-edu/cached_counts/actions/workflows/test.yml/badge.svg" />}[https://github.com/academia-edu/cached_counts/actions/workflows/test.yml]
+{rdoc-image:https://github.com/academia-edu/cached_counts/actions/workflows/test.yml/badge.svg}[https://github.com/academia-edu/cached_counts/actions/workflows/test.yml]
 
 A replacement for Rails' counter caches, using memcached.
 
