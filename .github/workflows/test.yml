@@ -1,0 +1,23 @@
+name: Test
+
+on:
+  push:
+
+jobs:
+  test-rails:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rails-version: ["7.0.8.7", "7.1.5.1", "8.0.2"]
+    env:
+      RAILS_VERSION: ${{ matrix.rails-version }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+      - name: install libsqlite3
+        run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
+      - name: test with Rails ${{ matrix.rails-version }}
+        run: bundle exec rspec
