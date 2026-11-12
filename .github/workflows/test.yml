@@ -12,8 +12,8 @@ jobs:
     env:
       RAILS_VERSION: ${{ matrix.rails-version }}
     steps:
-      - uses: actions/checkout@v6
-      - uses: ruby/setup-ruby@v1
+      - uses: actions/checkout@v6.1.0
+      - uses: ruby/setup-ruby@v1.338.0
         with:
           ruby-version: "4.0"
           bundler-cache: true
